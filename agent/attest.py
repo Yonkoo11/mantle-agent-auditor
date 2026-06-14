@@ -61,10 +61,12 @@ def _txhash_hex(rcpt) -> str:
     return s if s.startswith("0x") else "0x" + s
 
 
-def _send(w3, acct, fn):
+def _send(w3, acct, fn, nonce):
+    """Send with an explicit nonce. Mantle's sequencer can lag on get_transaction_count right after a
+    tx is mined, so the caller manages the nonce and increments it per tx."""
     tx = fn.build_transaction({
         "from": acct.address,
-        "nonce": w3.eth.get_transaction_count(acct.address),
+        "nonce": nonce,
         "chainId": w3.eth.chain_id,
         "gas": 500000,
         "gasPrice": w3.eth.gas_price,
@@ -72,6 +74,8 @@ def _send(w3, acct, fn):
     signed = acct.sign_transaction(tx)
     h = w3.eth.send_raw_transaction(signed.raw_transaction)
     rcpt = w3.eth.wait_for_transaction_receipt(h, timeout=180)
+    if rcpt.get("status") != 1:
+        raise RuntimeError(f"transaction reverted on-chain: {_txhash_hex(rcpt)}")
     return rcpt
 
 
@@ -82,9 +86,11 @@ def write_attestation(target: str, passed: bool, vuln_count: int, highest_severi
     target = Web3.to_checksum_address(target)
     rh = bytes.fromhex(report_hash_hex[2:]) if report_hash_hex.startswith("0x") else bytes.fromhex(report_hash_hex)
 
+    nonce = w3.eth.get_transaction_count(acct.address, "pending")
     reg = w3.eth.contract(address=Web3.to_checksum_address(AUDIT_REGISTRY), abi=_REGISTRY_ABI)
     rcpt = _send(w3, acct, reg.functions.attest(
-        target, passed, vuln_count, highest_severity, erc8004_agent_id, rh, ipfs_cid))
+        target, passed, vuln_count, highest_severity, erc8004_agent_id, rh, ipfs_cid), nonce)
+    nonce += 1
     reg_hash = _txhash_hex(rcpt)
     result = {
         "registryTx": reg_hash,
@@ -100,7 +106,7 @@ def write_attestation(target: str, passed: bool, vuln_count: int, highest_severi
             r2 = _send(w3, acct, rep.functions.giveFeedback(
                 erc8004_agent_id, score, 0, "security-audit",
                 "critical" if highest_severity >= 5 else "high" if highest_severity == 4 else "ok",
-                "mantle-agent-auditor", ipfs_cid or "", rh))
+                "mantle-agent-auditor", ipfs_cid or "", rh), nonce)
             rep_hash = _txhash_hex(r2)
             result["reputationTx"] = rep_hash
             result["reputationTxUrl"] = EXPLORER_TX + rep_hash

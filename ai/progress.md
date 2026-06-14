@@ -30,7 +30,7 @@ not a mock.
 
 ### Next
 - [ ] Verify registry source on Mantlescan/Blockscout (explorer API was 503; retry)
-- [ ] ERC-8004 binding live test (giveFeedback) — needs a target with a real agentId
+- [x] ERC-8004 binding live test PASSED — giveFeedback bound verdict to agent 186; getSummary returns count=1, value=20, tag=security-audit (tx 0x5965c8...)
 - [ ] Public frontend (GitHub Pages): paste address -> verdict + tx links
 - [ ] Tencent Cloud Hunyuan: BLOCKED on user signup (HUNYUAN_API_KEY not set). LLM pass falls back to
       Slither-only and says so honestly until the key exists.
@@ -39,4 +39,4 @@ not a mock.
 ### Honest gaps
 - LLM (Tencent) pass is written but UNTESTED live — no API key yet. Current verdicts are Slither-only.
 - Registry source not yet verified on the explorer (cosmetic; contract works).
-- ERC-8004 giveFeedback path is coded against the real ABI but not yet executed live.
+- ERC-8004 giveFeedback verified live (agent 186). Note: registry blocks self-feedback, so the auditor key must differ from the audited agent's owner (correct real-world case).

@@ -47,7 +47,10 @@ async function check(address) {
     $("verdict-pill").className = "pill " + (safe ? "ok" : "bad");
     $("verdict-target").textContent = address;
     $("r-count").textContent = a.vulnCount.toString();
-    $("r-sev").textContent = SEV[Number(a.highestSeverity)] || a.highestSeverity.toString();
+    const sevN = Number(a.highestSeverity);
+    const sevEl = $("r-sev");
+    sevEl.textContent = SEV[sevN] || a.highestSeverity.toString();
+    sevEl.className = "v sev-" + (sevN >= 4 ? "high" : sevN === 3 ? "med" : "low");
     $("r-agent").textContent = a.erc8004AgentId === 0n ? "not registered" : "#" + a.erc8004AgentId.toString();
     const d = new Date(Number(a.timestamp) * 1000);
     $("r-time").textContent = d.toISOString().slice(0, 16).replace("T", " ") + " UTC";

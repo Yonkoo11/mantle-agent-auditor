@@ -48,7 +48,10 @@ button:hover { filter: brightness(1.08); }
 .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin-bottom: 16px; }
 .cell { background: var(--panel); padding: 14px 16px; }
 .k { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
-.v { font-size: 18px; font-weight: 600; margin-top: 4px; }
+.v { font-size: 18px; font-weight: 600; margin-top: 4px; text-transform: capitalize; }
+.sev-high { color: var(--bad); }
+.sev-med { color: var(--warn); }
+.sev-low { color: var(--accent); }
 .hashrow { display: flex; gap: 12px; align-items: baseline; padding: 8px 0; border-top: 1px solid var(--line); font-size: 13px; }
 .hashrow .k { white-space: nowrap; }
 .hashrow code { color: var(--text); word-break: break-all; }

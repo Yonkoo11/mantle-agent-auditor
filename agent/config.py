@@ -15,10 +15,17 @@ ERC8004_IDENTITY = "0x8004A818BFB912233c491871b3d84c89A494BD9e"
 ERC8004_REPUTATION = "0x8004B663056A597Dffe9eCcC1965A193B7388713"
 
 # LLM reasoning pass — any OpenAI-compatible provider. Auto-detected by which key is set.
-# Groq is the free, no-credit-card default (key: GROQ_API_KEY from https://console.groq.com).
+# All free + no credit card; pick whichever signup works in your region.
+# Google Gemini (free, works broadly incl. Nigeria): GEMINI_API_KEY from https://aistudio.google.com
+GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai"
+GEMINI_MODEL = "gemini-2.0-flash"
+# OpenRouter (free models, no card): OPENROUTER_API_KEY from https://openrouter.ai
+OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+OPENROUTER_MODEL = "meta-llama/llama-3.3-70b-instruct:free"
+# Groq (free, no card — but geo-blocked in some regions): GROQ_API_KEY from https://console.groq.com
 GROQ_BASE_URL = "https://api.groq.com/openai/v1"
 GROQ_MODEL = "llama-3.3-70b-versatile"
-# Tencent Cloud Hunyuan — optional (sponsor-track bonus). Key: HUNYUAN_API_KEY.
+# Tencent Cloud Hunyuan — optional (sponsor-track bonus, needs a card). Key: HUNYUAN_API_KEY.
 HUNYUAN_BASE_URL = "https://api.hunyuan.cloud.tencent.com/v1"
 HUNYUAN_MODEL = "hunyuan-turbos-latest"
 

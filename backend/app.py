@@ -67,10 +67,11 @@ def fetch_source(address: str) -> Tuple[str, str]:
 
 
 def _llm_provider():
-    if os.getenv("GROQ_API_KEY"):
-        return "groq"
-    if os.getenv("HUNYUAN_API_KEY") or os.getenv("TENCENT_SECRET_ID"):
-        return "hunyuan"
+    for env, name in (("GEMINI_API_KEY", "gemini"), ("OPENROUTER_API_KEY", "openrouter"),
+                      ("GROQ_API_KEY", "groq"), ("HUNYUAN_API_KEY", "hunyuan"),
+                      ("TENCENT_SECRET_ID", "hunyuan")):
+        if os.getenv(env):
+            return name
     return None
 
 

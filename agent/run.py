@@ -66,10 +66,12 @@ def main():
     static = run_slither(source_path)
     # 2. LLM reasoning pass (empty if no LLM key -> reported honestly)
     llm = run_llm(source)
-    llm_active = bool(os.getenv("GROQ_API_KEY") or os.getenv("HUNYUAN_API_KEY") or (os.getenv("TENCENT_SECRET_ID") and os.getenv("TENCENT_SECRET_KEY")))
+    _llm_keys = ("GEMINI_API_KEY", "OPENROUTER_API_KEY", "GROQ_API_KEY", "HUNYUAN_API_KEY", "TENCENT_SECRET_ID")
+    _active_key = next((k for k in _llm_keys if os.getenv(k)), None)
+    llm_active = bool(_active_key)
 
     findings = merge_findings(static, llm)
-    model_version = ("groq" if os.getenv("GROQ_API_KEY") else HUNYUAN_MODEL) if llm_active else "slither-only"
+    model_version = _active_key.replace("_API_KEY", "").replace("_SECRET_ID", "").lower() if llm_active else "slither-only"
     report = build_report(target, source_name, findings, model_version, args.agent_id)
     digest, hex_hash = report_hash(report)
 

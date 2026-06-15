@@ -14,11 +14,18 @@ import time
 import urllib.request
 from typing import List, Dict
 
-from config import HUNYUAN_BASE_URL, HUNYUAN_MODEL, GROQ_BASE_URL, GROQ_MODEL
+from config import (
+    HUNYUAN_BASE_URL, HUNYUAN_MODEL, GROQ_BASE_URL, GROQ_MODEL,
+    GEMINI_BASE_URL, GEMINI_MODEL, OPENROUTER_BASE_URL, OPENROUTER_MODEL,
+)
 
 
 def _provider():
-    """Pick the active OpenAI-compatible provider by which key is set. Groq (free, no card) first."""
+    """Pick the active OpenAI-compatible provider by which key is set (all free/no-card first)."""
+    if os.getenv("GEMINI_API_KEY"):
+        return GEMINI_BASE_URL, os.getenv("GEMINI_API_KEY"), GEMINI_MODEL
+    if os.getenv("OPENROUTER_API_KEY"):
+        return OPENROUTER_BASE_URL, os.getenv("OPENROUTER_API_KEY"), OPENROUTER_MODEL
     if os.getenv("GROQ_API_KEY"):
         return GROQ_BASE_URL, os.getenv("GROQ_API_KEY"), GROQ_MODEL
     if os.getenv("HUNYUAN_API_KEY"):

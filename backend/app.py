@@ -66,9 +66,18 @@ def fetch_source(address: str) -> Tuple[str, str]:
     raise RuntimeError("No verified source found for this address (Blockscout/Sourcify). Paste the source instead.")
 
 
+def _llm_provider():
+    if os.getenv("GROQ_API_KEY"):
+        return "groq"
+    if os.getenv("HUNYUAN_API_KEY") or os.getenv("TENCENT_SECRET_ID"):
+        return "hunyuan"
+    return None
+
+
 @app.get("/health")
 def health():
-    return {"ok": True, "llm": bool(os.getenv("HUNYUAN_API_KEY") or os.getenv("TENCENT_SECRET_ID"))}
+    p = _llm_provider()
+    return {"ok": True, "llm": bool(p), "provider": p or "slither-only"}
 
 
 @app.post("/audit")
@@ -94,7 +103,7 @@ def audit(req: AuditReq):
     except Exception as e:
         return {"error": f"Could not compile/analyze the contract: {str(e)[:200]}"}
     llm = run_llm(source)
-    llm_active = bool(os.getenv("HUNYUAN_API_KEY") or (os.getenv("TENCENT_SECRET_ID") and os.getenv("TENCENT_SECRET_KEY")))
+    llm_active = bool(_llm_provider())
 
     findings = merge_findings(static, llm)
     model = HUNYUAN_MODEL if llm_active else "slither-only"

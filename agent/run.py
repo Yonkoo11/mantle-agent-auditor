@@ -64,12 +64,12 @@ def main():
 
     # 1. static ground-truth pass
     static = run_slither(source_path)
-    # 2. LLM reasoning pass (empty if no Tencent credentials -> reported honestly)
+    # 2. LLM reasoning pass (empty if no LLM key -> reported honestly)
     llm = run_llm(source)
-    llm_active = bool(os.getenv("HUNYUAN_API_KEY") or (os.getenv("TENCENT_SECRET_ID") and os.getenv("TENCENT_SECRET_KEY")))
+    llm_active = bool(os.getenv("GROQ_API_KEY") or os.getenv("HUNYUAN_API_KEY") or (os.getenv("TENCENT_SECRET_ID") and os.getenv("TENCENT_SECRET_KEY")))
 
     findings = merge_findings(static, llm)
-    model_version = HUNYUAN_MODEL if llm_active else "slither-only"
+    model_version = ("groq" if os.getenv("GROQ_API_KEY") else HUNYUAN_MODEL) if llm_active else "slither-only"
     report = build_report(target, source_name, findings, model_version, args.agent_id)
     digest, hex_hash = report_hash(report)
 

@@ -2,7 +2,7 @@
 
 > **Sentinel** · [Live demo ↗](https://yonkoo11.github.io/mantle-sentinel/)
 
-Paste a Mantle contract. A hybrid engine (Slither static analysis + Tencent Hunyuan reasoning) finds
+Paste a Mantle contract. A hybrid engine (Slither static analysis + a free LLM reasoning pass (Groq; Tencent Hunyuan optional)) finds
 the vulnerabilities, decides pass/fail, and writes the verdict **on-chain** — bound to the contract's
 **ERC-8004 agent identity**, so an autonomous agent's safety reputation travels with it.
 
@@ -84,8 +84,7 @@ Keys are read from the environment at runtime (`DEPLOYER_PRIVATE_KEY`, `HUNYUAN_
 
 - **Mantle + ERC-8004** — reads identity, registers agents, writes our registry, and binds verdicts to
   agent reputation. Four primitives load-bearing.
-- **Tencent Cloud Hunyuan** — runs the LLM audit pass (OpenAI-compatible endpoint + a natively
-  TC3-HMAC-SHA256-signed call). Without a key, the engine falls back to Slither-only and says so.
+- **Tencent Cloud Hunyuan** — is an OPTIONAL alternative LLM provider for the audit pass (sponsor-track bonus). The free default is Groq (no card). Without any key, the engine falls back to Slither-only and says so.
 
 ## Honest status
 

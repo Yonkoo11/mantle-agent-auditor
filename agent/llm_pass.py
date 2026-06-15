@@ -1,12 +1,11 @@
-"""LLM reasoning pass on Tencent Cloud Hunyuan.
+"""LLM reasoning pass — any OpenAI-compatible provider, auto-detected by which key is set.
 
-Two paths, both genuine Tencent Cloud integration:
-  - openai_compatible(): the simple Bearer-key endpoint (default for the audit).
-  - tc3_signed(): a natively TC3-HMAC-SHA256-signed ChatCompletions call, proving real
-    Tencent Cloud platform auth (SecretId/SecretKey), not just an OpenAI shim.
+  - Groq (GROQ_API_KEY): free, no credit card — the default. https://console.groq.com
+  - Hunyuan (HUNYUAN_API_KEY): optional Tencent Cloud sponsor-track alternative.
+  - tc3_signed(): optional native TC3-HMAC-SHA256 Tencent call (needs TENCENT_SECRET_ID/KEY).
 
-If no Tencent credentials are present the pass returns [] and the pipeline falls back to the
-Slither ground-truth layer. This is reported honestly, never silently faked."""
+If no key is present the pass returns [] and the pipeline falls back to the Slither ground-truth
+layer. This is reported honestly, never silently faked."""
 import os
 import json
 import hashlib
@@ -15,7 +14,16 @@ import time
 import urllib.request
 from typing import List, Dict
 
-from config import HUNYUAN_BASE_URL, HUNYUAN_MODEL
+from config import HUNYUAN_BASE_URL, HUNYUAN_MODEL, GROQ_BASE_URL, GROQ_MODEL
+
+
+def _provider():
+    """Pick the active OpenAI-compatible provider by which key is set. Groq (free, no card) first."""
+    if os.getenv("GROQ_API_KEY"):
+        return GROQ_BASE_URL, os.getenv("GROQ_API_KEY"), GROQ_MODEL
+    if os.getenv("HUNYUAN_API_KEY"):
+        return HUNYUAN_BASE_URL, os.getenv("HUNYUAN_API_KEY"), HUNYUAN_MODEL
+    return None
 
 _PROMPT = """You are a smart-contract security auditor. Analyze the Solidity below.
 Return ONLY a JSON array. Each item: {{"severity": one of [critical,high,medium,low,informational],
@@ -45,23 +53,24 @@ def _parse(content: str) -> List[Dict]:
             "title": str(it.get("title", ""))[:200],
             "lines": [int(x) for x in it.get("lines", []) if str(x).isdigit()],
             "confidence": "Medium",
-            "source": "hunyuan",
+            "source": "llm",
             "explanation": str(it.get("explanation", ""))[:300],
         })
     return out
 
 
 def openai_compatible(source: str) -> List[Dict]:
-    key = os.getenv("HUNYUAN_API_KEY")
-    if not key:
+    prov = _provider()
+    if not prov:
         return []
+    base_url, key, model = prov
     body = json.dumps({
-        "model": HUNYUAN_MODEL,
+        "model": model,
         "messages": [{"role": "user", "content": _PROMPT.format(source=source)}],
         "temperature": 0.2,
     }).encode()
     req = urllib.request.Request(
-        f"{HUNYUAN_BASE_URL}/chat/completions", data=body,
+        f"{base_url}/chat/completions", data=body,
         headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
     )
     with urllib.request.urlopen(req, timeout=120) as r:

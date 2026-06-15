@@ -14,7 +14,11 @@ AUDIT_REGISTRY = "0xbCE17E724c0Cd038622a9C4299F86Caf411C1Fae"
 ERC8004_IDENTITY = "0x8004A818BFB912233c491871b3d84c89A494BD9e"
 ERC8004_REPUTATION = "0x8004B663056A597Dffe9eCcC1965A193B7388713"
 
-# Tencent Cloud Hunyuan (inference). Key from env: HUNYUAN_API_KEY (OpenAI-compatible Bearer).
+# LLM reasoning pass — any OpenAI-compatible provider. Auto-detected by which key is set.
+# Groq is the free, no-credit-card default (key: GROQ_API_KEY from https://console.groq.com).
+GROQ_BASE_URL = "https://api.groq.com/openai/v1"
+GROQ_MODEL = "llama-3.3-70b-versatile"
+# Tencent Cloud Hunyuan — optional (sponsor-track bonus). Key: HUNYUAN_API_KEY.
 HUNYUAN_BASE_URL = "https://api.hunyuan.cloud.tencent.com/v1"
 HUNYUAN_MODEL = "hunyuan-turbos-latest"
 

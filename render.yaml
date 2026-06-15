@@ -1,6 +1,7 @@
 # One-click deploy for the Sentinel audit API on Render.
 # In Render: New + → Blueprint → connect this repo → it reads this file.
-# After deploy, set HUNYUAN_API_KEY in the service's Environment tab to turn on the AI pass.
+# After deploy, set GROQ_API_KEY in the service's Environment tab to turn on the AI pass
+# (free, no card: https://console.groq.com). HUNYUAN_API_KEY is an optional alternative.
 services:
   - type: web
     name: sentinel-audit-api
@@ -10,7 +11,7 @@ services:
     plan: free
     healthCheckPath: /health
     envVars:
-      - key: HUNYUAN_API_KEY
-        sync: false   # set this yourself in the Render dashboard (never in the repo)
+      - key: GROQ_API_KEY
+        sync: false   # set this yourself in the dashboard (never in the repo)
       - key: PORT
         value: 8000

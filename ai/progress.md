@@ -70,3 +70,11 @@ What Changed (Plain English): Built the service that lets Sentinel audit ANY con
 - [ ] DEPLOY: user creates Render account -> Blueprint deploy (render.yaml) -> set HUNYUAN_API_KEY
 - [ ] then wire the frontend 'audit any address' to the live API URL + test round-trip
 - NOTE: by-address source fetch depends on Blockscout/Sourcify (Blockscout still 503); paste-source path tested + working.
+
+### Audit-any-address LIVE + AI on (2026-06-15)
+What Changed (Plain English): The site now audits ANY contract live — paste code (or enter an address) and it runs a fresh Slither+AI audit and shows the grade + findings. AI is on via free Google Gemini (Groq was geo-blocked in NG). Backend deployed free on Hugging Face Spaces.
+- [x] Backend LIVE: https://yonko11-sentinel-audit-api.hf.space (/health shows gemini; /audit verified)
+- [x] AI pass PROVEN live: Slither+Gemini converge; Gemini added a CRITICAL finding on a pasted contract
+- [x] Frontend wired + visually verified: scan address -> on-chain verdict, else fresh live audit; "paste source" mode
+- NOTE: GEMINI_API_KEY set as HF Space secret. ROTATE the key after the event (it passed through chat).
+- remaining: by-address live audit needs verified source (Blockscout 503 / Sourcify); paste-source always works. Demo video + submission still to do.

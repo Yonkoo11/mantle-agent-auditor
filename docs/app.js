@@ -29,12 +29,14 @@ function short(a) {
 }
 
 async function check(address) {
-  $("result").classList.add("hidden");
+  const resultEl = $("result");
+  resultEl.classList.add("hidden");
+  resultEl.classList.remove("pass", "fail");
   if (!ethers.isAddress(address)) {
     setStatus("That doesn't look like a valid address.", "err");
     return;
   }
-  setStatus("Reading the verdict from Mantle…");
+  setStatus("Reading the verdict from Mantle…", "loading");
   try {
     const n = await registry.count(address);
     if (n === 0n) {
@@ -70,7 +72,8 @@ async function check(address) {
       erc.textContent = `bound to ERC-8004 agent #${a.erc8004AgentId} reputation`;
       linksEl.appendChild(erc);
     }
-    $("result").classList.remove("hidden");
+    resultEl.classList.add(safe ? "pass" : "fail");
+    resultEl.classList.remove("hidden");
     setStatus("");
   } catch (e) {
     setStatus("Could not read the verdict: " + (e.shortMessage || e.message), "err");

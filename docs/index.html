@@ -14,55 +14,64 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <div class="bg" aria-hidden="true"></div>
+
   <header class="hero">
     <div class="wrap">
-      <div class="brand">Sentinel</div>
-      <div class="badge">Mantle Sepolia · ERC-8004</div>
-      <h1>AI auditor for on-chain agents</h1>
-      <p class="tag">Paste a contract. Read its security verdict straight from Mantle — bound to the agent's on-chain identity.</p>
+      <div class="topline">
+        <div class="brand"><span class="mark" aria-hidden="true"></span>Sentinel</div>
+        <div class="live"><span class="dot"></span>live on Mantle Sepolia</div>
+      </div>
+      <h1>The safety layer<br>for on-chain agents.</h1>
+      <p class="tag">Paste a Mantle contract. Sentinel finds the bugs and writes a pass/fail verdict
+        straight to the chain — bound to the agent's ERC-8004 identity, so its safety reputation travels with it.</p>
     </div>
   </header>
 
   <main class="wrap">
-    <section class="panel">
-      <label for="addr">Contract address</label>
+    <section class="panel" aria-label="Check a verdict">
+      <label for="addr">Read a contract's on-chain verdict</label>
       <div class="row">
-        <input id="addr" type="text" placeholder="0x…" spellcheck="false" autocomplete="off" />
+        <input id="addr" type="text" inputmode="text" placeholder="0x… contract address" spellcheck="false" autocomplete="off" />
         <button id="check">Check verdict</button>
       </div>
-      <button id="sample" class="link">Try the audited sample contract</button>
-      <p id="status" class="status"></p>
+      <button id="sample" class="link">↳ try the audited sample contract</button>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
     </section>
 
-    <section id="result" class="result hidden">
-      <div class="verdict-head">
-        <span id="verdict-pill" class="pill"></span>
-        <span id="verdict-target" class="mono"></span>
+    <section id="result" class="result hidden" aria-label="Verdict">
+      <div class="rail" aria-hidden="true"></div>
+      <div class="result-body">
+        <div class="verdict-head">
+          <span id="verdict-pill" class="pill"></span>
+          <span id="verdict-target" class="mono"></span>
+        </div>
+        <div class="grid">
+          <div class="cell"><div class="k">Findings</div><div class="v" id="r-count">—</div></div>
+          <div class="cell"><div class="k">Highest severity</div><div class="v" id="r-sev">—</div></div>
+          <div class="cell"><div class="k">ERC-8004 agent</div><div class="v" id="r-agent">—</div></div>
+          <div class="cell"><div class="k">Audited</div><div class="v" id="r-time">—</div></div>
+        </div>
+        <div class="hashrow"><span class="k">Report hash</span><code id="r-hash" class="mono">—</code></div>
+        <div class="hashrow"><span class="k">Auditor</span><code id="r-auditor" class="mono">—</code></div>
+        <div id="links" class="links"></div>
       </div>
-      <div class="grid">
-        <div class="cell"><div class="k">Findings</div><div class="v" id="r-count">—</div></div>
-        <div class="cell"><div class="k">Highest severity</div><div class="v" id="r-sev">—</div></div>
-        <div class="cell"><div class="k">ERC-8004 agent</div><div class="v" id="r-agent">—</div></div>
-        <div class="cell"><div class="k">Audited</div><div class="v" id="r-time">—</div></div>
-      </div>
-      <div class="hashrow"><span class="k">Report hash</span><code id="r-hash" class="mono">—</code></div>
-      <div class="hashrow"><span class="k">Auditor</span><code id="r-auditor" class="mono">—</code></div>
-      <div id="links" class="links"></div>
     </section>
 
-    <section class="how">
-      <h2>How it works</h2>
-      <ol>
-        <li><b>Read the code.</b> A hybrid engine (Slither static analysis + Tencent Hunyuan reasoning) finds the bugs with line numbers.</li>
-        <li><b>Anchor the report.</b> The full report is hashed (keccak256) so the on-chain verdict is tamper-evident.</li>
-        <li><b>Write the verdict.</b> A pass/fail attestation is written to our registry on Mantle — any contract can call <code>isAttestedSafe(addr)</code>.</li>
-        <li><b>Bind to identity.</b> If the target is an ERC-8004 agent, the verdict is also written to its reputation, so safety travels with the agent.</li>
+    <section class="how" aria-label="How it works">
+      <h2>How a verdict is made</h2>
+      <ol class="steps">
+        <li><span class="n">01</span><div><b>Read the code.</b> A hybrid engine — Slither static analysis plus an LLM reasoning pass on Tencent Hunyuan — finds the bugs with line numbers.</div></li>
+        <li><span class="n">02</span><div><b>Anchor the report.</b> The full report is hashed with keccak256, so the on-chain verdict is tamper-evident and falsifiable.</div></li>
+        <li><span class="n">03</span><div><b>Write the verdict.</b> A pass/fail attestation is written to the registry on Mantle — any contract can call <code>isAttestedSafe(addr)</code>.</div></li>
+        <li><span class="n">04</span><div><b>Bind to identity.</b> If the target is an ERC-8004 agent, the verdict is written to its reputation too — safety travels with the agent.</div></li>
       </ol>
     </section>
   </main>
 
   <footer class="wrap">
-    <p>Registry <a id="reg-link" class="mono" target="_blank" rel="noopener"></a> on Mantle Sepolia · open source (MIT)</p>
+    <p>Registry <a id="reg-link" class="mono" target="_blank" rel="noopener"></a> on Mantle Sepolia
+      · <a href="https://github.com/Yonkoo11/mantle-sentinel" target="_blank" rel="noopener">open source (MIT)</a></p>
   </footer>
 
   <script src="vendor/ethers.umd.min.js"></script>

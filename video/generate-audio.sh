@@ -10,7 +10,8 @@ typeset -A CLIPS
 CLIPS[money]="Paste a contract into Sentinel. Two engines grade it in seconds, Slither and an AI model. Here it flagged a critical bug. Funds the owner could drain."
 CLIPS[onchain]="The verdict is written to Mantle. The report is hashed, so the grade is tamper-proof and anyone can verify it."
 CLIPS[registry]="Every contract it grades lives in one on-chain registry. Pass or fail, A through F, read live from the chain."
-CLIPS[composable]="Each grade binds to the agent's ERC-8004 identity. One call, isAttestedSafe, lets any contract refuse an agent that never passed."
+# Phonetic spellings so the AI voice says these right (captions keep the real spelling): ERC-8004 -> "E R C eighty oh four", isAttestedSafe -> "is attested safe".
+CLIPS[composable]="Each grade binds to the agent's E R C eighty oh four identity. One call, is attested safe, lets any contract refuse an agent that never passed."
 CLIPS[close]="Sentinel. Audit any agent, and prove it on-chain."
 
 ORDER=(money onchain registry composable close)

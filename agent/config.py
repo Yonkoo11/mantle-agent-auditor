@@ -18,7 +18,7 @@ ERC8004_REPUTATION = "0x8004B663056A597Dffe9eCcC1965A193B7388713"
 # All free + no credit card; pick whichever signup works in your region.
 # Google Gemini (free, works broadly incl. Nigeria): GEMINI_API_KEY from https://aistudio.google.com
 GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai"
-GEMINI_MODEL = "gemini-2.0-flash"
+GEMINI_MODEL = "gemini-2.5-flash-lite"
 # OpenRouter (free models, no card): OPENROUTER_API_KEY from https://openrouter.ai
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 OPENROUTER_MODEL = "meta-llama/llama-3.3-70b-instruct:free"

@@ -30,8 +30,8 @@ GRADE = [("A", 98), ("A", 92), ("B", 82), ("C", 68), ("D", 46), ("F", 22)]
 
 
 def _clean(title: str) -> str:
-    """Strip Slither's trailing '(/tmp/path#L-L):' file location from a finding title."""
-    return re.sub(r"\s*\([^()]*#\d[\d\-,]*\):?\s*$", "", title).strip()
+    """Strip Slither's '(/tmp/path#L-L)' file locations from a finding title, wherever they appear."""
+    return re.sub(r"\s*\([^()]*#\d[\d\-,]*\):?", "", title).strip()
 
 app = FastAPI(title="Sentinel Audit API")
 app.add_middleware(
